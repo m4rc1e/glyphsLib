@@ -30,27 +30,29 @@ __all__ = [
 ]
 
 
-def load(fp):
+def load(fp, status=True):
     """Read a .glyphs file. 'fp' should be (readable) file object.
     Return the unpacked root object (an ordered dictionary).
     """
-    return loads(fp.read())
+    return loads(fp.read(),status=status)
 
 
-def loads(value):
+def loads(value, status=True):
     """Read a .glyphs file from a bytes object.
     Return the unpacked root object (an ordered dictionary).
     """
     p = Parser()
-    print('>>> Parsing .glyphs file')
+    if status:
+        print('>>> Parsing .glyphs file')
     data = p.parse(value)
-    print('>>> Casting parsed values')
+    if status:
+        print('>>> Casting parsed values')
     cast_data(data)
     return data
 
 
 def load_to_ufos(file_or_path, include_instances=False, family_name=None,
-                 debug=False):
+                 debug=False, status=True):
     """Load an unpacked .glyphs object to UFO objects."""
 
     if hasattr(file_or_path, 'read'):
@@ -58,7 +60,8 @@ def load_to_ufos(file_or_path, include_instances=False, family_name=None,
     else:
         with open(file_or_path, 'r', encoding='utf-8') as ifile:
             data = load(ifile)
-    print('>>> Loading to UFOs')
+    if status:
+        print('>>> Loading to UFOs')
     return to_ufos(data, include_instances=include_instances,
                    family_name=family_name, debug=debug)
 
